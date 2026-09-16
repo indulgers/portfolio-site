@@ -33,13 +33,13 @@
 - `src/styles.css` — editorial tokens, responsive layout, interaction/motion rules, and reduced-motion overrides.
 - `src/App.test.tsx` — semantic content, legacy-copy removal, external links, index rendering, and work expansion tests.
 - `src/styles.test.ts` — source-level guard for the required reduced-motion stylesheet rule.
-- `.codex/skills/impeccable/` and `.codex/hooks.json` — project-scoped Impeccable payload and hook files created only by its installer; review before committing any installer-created project files.
+- `.agents/skills/impeccable/` and `.codex/hooks.json` — project-scoped Impeccable payload and hook files created by the Codex installer; review before committing any installer-created project files.
 
 ### Task 1: Prepare the local design-review tool without changing runtime dependencies
 
 **Files:**
-- Create or modify only installer-generated project files under `.codex/` after inspection.
-- Modify: `.gitignore` only if the installer creates machine-local cache or state outside `.codex/skills/impeccable/`.
+- Create or modify only installer-generated project files under `.agents/` and `.codex/` after inspection.
+- Modify: `.gitignore` only if the installer creates machine-local cache or state outside `.agents/skills/impeccable/`.
 
 **Interfaces:**
 - Produces the `/impeccable` Codex command and optional project hook; application imports and `package.json` runtime dependencies remain unchanged.
@@ -66,10 +66,10 @@ Run:
 
 ```bash
 git status --short
-find .codex -maxdepth 3 -type f | sort
+find .agents .codex -maxdepth 4 -type f | sort
 ```
 
-Expected: the skill payload and any hook manifest are confined to `.codex/`; no production dependency is added to `package.json`.
+Expected: the skill payload and hook manifest are confined to `.agents/` and `.codex/`; no production dependency is added to `package.json`.
 
 - [ ] **Step 4: Initialize durable Impeccable context**
 
@@ -78,7 +78,7 @@ Run `/impeccable init` in Codex. Record the portfolio audience, static-only cons
 - [ ] **Step 5: Commit only reviewed project-scoped tool configuration**
 
 ```bash
-git add .codex/skills/impeccable .codex/hooks.json .gitignore
+git add .agents/skills/impeccable .codex/hooks.json PRODUCT.md .gitignore
 git commit -m "chore: add impeccable design tooling"
 ```
 
