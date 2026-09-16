@@ -1,5 +1,37 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '@testing-library/react';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import App from './App';
+
+let observerCallback: IntersectionObserverCallback | undefined;
+
+class MockIntersectionObserver {
+  disconnect = vi.fn();
+  observe = vi.fn();
+  root = null;
+  rootMargin = '0px';
+  takeRecords = vi.fn(() => []);
+  thresholds = [];
+  unobserve = vi.fn();
+
+  constructor(callback: IntersectionObserverCallback) {
+    observerCallback = callback;
+  }
+}
+
+beforeEach(() => {
+  observerCallback = undefined;
+  vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 test('introduces Weiye Zhu as a full-stack engineer', () => {
   render(<App />);
@@ -47,5 +79,28 @@ test('keeps the public profile links stable', () => {
   expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
     'href',
     'https://www.linkedin.com/in/weiye-zhu-211ba33b7/zh/',
+  );
+});
+
+test('marks the active index section after it enters the reading area', () => {
+  render(<App />);
+
+  expect(observerCallback).toBeDefined();
+
+  act(() => {
+    observerCallback?.(
+      [
+        {
+          isIntersecting: true,
+          target: document.getElementById('capabilities'),
+        } as IntersectionObserverEntry,
+      ],
+      {} as IntersectionObserver,
+    );
+  });
+
+  expect(screen.getByRole('link', { name: /capabilities/i })).toHaveAttribute(
+    'aria-current',
+    'location',
   );
 });

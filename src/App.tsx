@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SectionIndex } from './components/SectionIndex';
 import { WorkNarratives } from './components/WorkNarratives';
 import {
@@ -11,10 +11,40 @@ function ExternalMark() {
   return <span aria-hidden="true"> ↗</span>;
 }
 
+const SECTION_IDS = ['work', 'capabilities', 'contact'] as const;
+type SectionId = (typeof SECTION_IDS)[number];
+
 export default function App() {
   const [expandedWorkId, setExpandedWorkId] = useState<WorkEntry['id']>(
     'xmind',
   );
+  const [activeSectionId, setActiveSectionId] = useState<SectionId>('work');
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const sectionId = entry.target.id as SectionId;
+
+        if (entry.isIntersecting && SECTION_IDS.includes(sectionId)) {
+          setActiveSectionId(sectionId);
+        }
+      }
+    }, { rootMargin: '-20% 0px -60%', threshold: 0.01 });
+
+    const sections = SECTION_IDS.map((id) => document.getElementById(id));
+
+    sections.forEach((section) => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="site-frame">
@@ -57,16 +87,12 @@ export default function App() {
             </div>
           </div>
 
-          <aside className="hero-index" aria-label="Reading index">
-            <p>Index</p>
-            <SectionIndex activeSectionId="work" />
-          </aside>
         </section>
 
         <div className="reading-layout">
-          <aside className="desktop-index" aria-label="Reading index">
+          <aside className="section-index-panel" aria-label="Reading index">
             <p>Index</p>
-            <SectionIndex activeSectionId="work" />
+            <SectionIndex activeSectionId={activeSectionId} />
           </aside>
 
           <div className="reading-flow">
