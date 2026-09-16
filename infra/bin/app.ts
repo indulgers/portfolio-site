@@ -7,6 +7,7 @@ const stackConfig = resolveStackConfig(
   {
     certificateArn: app.node.tryGetContext('certificateArn'),
     domainName: app.node.tryGetContext('domainName'),
+    githubOidcSubject: app.node.tryGetContext('githubOidcSubject'),
     githubRepository: app.node.tryGetContext('githubRepository'),
     sitePath: app.node.tryGetContext('sitePath'),
   },

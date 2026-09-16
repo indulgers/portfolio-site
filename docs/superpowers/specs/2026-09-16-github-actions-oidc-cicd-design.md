@@ -21,10 +21,10 @@ Publish the Portfolio Site source to the public repository `indulgers/portfolio-
 
 ## Architecture
 
-The CDK stack optionally receives a `githubRepository` context value. When supplied, it creates:
+The CDK stack receives a `githubRepository` context value and, when GitHub uses immutable subjects, an exact `githubOidcSubject` context value. When supplied, it creates:
 
 1. A GitHub Actions OIDC identity provider, if the account does not already have one.
-2. A dedicated `GitHubActionsDeployRole` trusted only by tokens whose audience is `sts.amazonaws.com` and whose subject is `repo:indulgers/portfolio-site:ref:refs/heads/main`.
+2. A dedicated `GitHubActionsDeployRole` trusted only by tokens whose audience is `sts.amazonaws.com` and whose subject is the exact immutable `main` subject for this repository: `repo:indulgers@115327474/portfolio-site@1372345246:ref:refs/heads/main`.
 3. Permissions to read the CDK bootstrap version and assume only the bootstrap deploy, file-publishing, image-publishing, and lookup roles in this account and region.
 4. A CloudFormation output for the GitHub Actions role ARN.
 
@@ -59,7 +59,7 @@ These values are identifiers, not credentials. AWS authentication is exclusively
 ## Bootstrap sequence
 
 1. Create the public GitHub repository and push this project.
-2. Deploy the existing stack once with `githubRepository=indulgers/portfolio-site` using the current local AWS identity. This creates the OIDC role.
+2. Deploy the existing stack once with `githubRepository=indulgers/portfolio-site` and the repository's exact `githubOidcSubject` using the current local AWS identity. This creates the OIDC role.
 3. Read the role ARN output and set the three GitHub repository variables.
 4. Push the workflow files. The CI workflow validates the repository; the deployment workflow uses OIDC for each qualifying `main` commit.
 

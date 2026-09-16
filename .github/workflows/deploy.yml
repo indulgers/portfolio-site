@@ -40,10 +40,12 @@ jobs:
       - run: >-
           npm run cdk:diff -- --no-change-set
           -c githubRepository=${{ github.repository }}
+          -c githubOidcSubject=repo:${{ github.repository_owner }}@${{ github.repository_owner_id }}/portfolio-site@${{ github.repository_id }}:ref:refs/heads/main
           -c domainName=${{ vars.PORTFOLIO_DOMAIN }}
           -c certificateArn=${{ vars.PORTFOLIO_CERTIFICATE_ARN }}
       - run: >-
           npm run cdk:deploy -- --require-approval never
           -c githubRepository=${{ github.repository }}
+          -c githubOidcSubject=repo:${{ github.repository_owner }}@${{ github.repository_owner_id }}/portfolio-site@${{ github.repository_id }}:ref:refs/heads/main
           -c domainName=${{ vars.PORTFOLIO_DOMAIN }}
           -c certificateArn=${{ vars.PORTFOLIO_CERTIFICATE_ARN }}

@@ -96,7 +96,7 @@ The deployment copies the build to S3 and waits for the associated CloudFront in
 
 The public repository is `https://github.com/indulgers/portfolio-site`. Pull requests and every push to `main` run tests, type checking, and a production build. A separate deployment workflow runs only after a successful `main` CI run; it can also be dispatched manually.
 
-GitHub authenticates to AWS using OpenID Connect (OIDC), not stored AWS access keys. The CDK stack creates a role whose trust policy is limited to the `indulgers/portfolio-site` `main` branch and whose permissions are limited to assuming the CDK bootstrap deployment roles.
+GitHub authenticates to AWS using OpenID Connect (OIDC), not stored AWS access keys. The CDK stack creates a role whose trust policy is limited to this repository's immutable `main` subject (`repo:indulgers@115327474/portfolio-site@1372345246:ref:refs/heads/main`) and whose permissions are limited to assuming the CDK bootstrap deployment roles.
 
 Set these GitHub repository variables after the first local deployment that creates the OIDC role:
 

@@ -162,3 +162,11 @@ Use `gh variable set` for `AWS_DEPLOY_ROLE_ARN` from the output, `PORTFOLIO_DOMA
 - [ ] **Step 5: Push and verify**
 
 Commit the runbook change, then run `git push -u origin main`. Confirm CI and Deploy in `gh run list --repo indulgers/portfolio-site --limit 5`; confirm `PortfolioSiteStack` is `UPDATE_COMPLETE`. Commit any documentation result only when changed.
+
+## Implementation adjustment: immutable GitHub OIDC subjects
+
+GitHub created `indulgers/portfolio-site` after its immutable-subject rollout. The live repository reports `use_immutable_subject: true` and the prefix `repo:indulgers@115327474/portfolio-site@1372345246`. The initial name-only subject could not assume the role, so the implementation and tests use the exact immutable `main` subject instead:
+
+`repo:indulgers@115327474/portfolio-site@1372345246:ref:refs/heads/main`
+
+This is narrower than a wildcard and preserves the plan's main-only security boundary.

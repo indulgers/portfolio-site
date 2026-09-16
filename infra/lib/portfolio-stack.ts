@@ -15,6 +15,7 @@ export interface PortfolioStackProps extends StackProps {
     readonly certificateArn: string;
     readonly domainName: string;
   };
+  readonly githubOidcSubject?: string;
   readonly githubRepository?: string;
   readonly sitePath?: string;
 }
@@ -147,7 +148,9 @@ export class PortfolioStack extends Stack {
             {
               StringEquals: {
                 'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-                'token.actions.githubusercontent.com:sub': `repo:${props.githubRepository}:ref:refs/heads/main`,
+                'token.actions.githubusercontent.com:sub':
+                  props.githubOidcSubject ??
+                  `repo:${props.githubRepository}:ref:refs/heads/main`,
               },
             },
           ),

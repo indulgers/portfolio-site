@@ -24,6 +24,7 @@ describe('GitHub Actions workflows', () => {
     expect(deploy).toContain('aws-actions/configure-aws-credentials');
     expect(deploy).toContain("github.event.workflow_run.head_branch == 'main'");
     expect(deploy).toContain('npm run cdk:deploy');
+    expect(deploy).toContain('githubOidcSubject=repo:${{ github.repository_owner }}@${{ github.repository_owner_id }}/portfolio-site@${{ github.repository_id }}:ref:refs/heads/main');
     expect(deploy).not.toContain('AWS_ACCESS_KEY_ID');
   });
 });

@@ -5,6 +5,7 @@ export interface StackConfig {
     readonly certificateArn: string;
     readonly domainName: string;
   };
+  readonly githubOidcSubject?: string;
   readonly githubRepository?: string;
   readonly sitePath: string;
 }
@@ -16,6 +17,7 @@ export function resolveStackConfig(
   const domainName = optionalString(context.domainName);
   const certificateArn = optionalString(context.certificateArn);
   const githubRepository = optionalString(context.githubRepository);
+  const githubOidcSubject = optionalString(context.githubOidcSubject);
   const sitePath = optionalString(context.sitePath) ?? 'dist';
 
   if (Boolean(domainName) !== Boolean(certificateArn)) {
@@ -38,6 +40,7 @@ export function resolveStackConfig(
         }
       : {}),
     ...(githubRepository ? { githubRepository } : {}),
+    ...(githubOidcSubject ? { githubOidcSubject } : {}),
     sitePath: resolve(workingDirectory, sitePath),
   };
 }

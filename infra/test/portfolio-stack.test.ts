@@ -160,6 +160,8 @@ test('creates a main-only GitHub OIDC deployment role with constrained permissio
   const app = new App();
   const stack = new PortfolioStack(app, 'PortfolioStack', {
     githubRepository: 'indulgers/portfolio-site',
+    githubOidcSubject:
+      'repo:indulgers@115327474/portfolio-site@1372345246:ref:refs/heads/main',
   });
   const template = Template.fromStack(stack);
 
@@ -172,7 +174,7 @@ test('creates a main-only GitHub OIDC deployment role with constrained permissio
             StringEquals: {
               'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
               'token.actions.githubusercontent.com:sub':
-                'repo:indulgers/portfolio-site:ref:refs/heads/main',
+                'repo:indulgers@115327474/portfolio-site@1372345246:ref:refs/heads/main',
             },
           },
           Effect: 'Allow',

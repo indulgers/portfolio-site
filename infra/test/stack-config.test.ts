@@ -15,6 +15,21 @@ describe('resolveStackConfig', () => {
     ).toMatchObject({ githubRepository: 'indulgers/portfolio-site' });
   });
 
+  test('keeps an explicit immutable GitHub OIDC subject', () => {
+    expect(
+      resolveStackConfig(
+        {
+          githubOidcSubject:
+            'repo:indulgers@115327474/portfolio-site@1372345246:ref:refs/heads/main',
+        },
+        '/project',
+      ),
+    ).toMatchObject({
+      githubOidcSubject:
+        'repo:indulgers@115327474/portfolio-site@1372345246:ref:refs/heads/main',
+    });
+  });
+
   test('accepts a complete custom-domain configuration', () => {
     expect(
       resolveStackConfig(
