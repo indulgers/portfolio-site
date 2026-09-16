@@ -1,0 +1,9 @@
+node_modules/
+dist/
+cdk.out/
+coverage/
+work/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
