@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import App from './App';
 
 test('introduces Weiye Zhu as a full-stack engineer', () => {
@@ -10,7 +10,34 @@ test('introduces Weiye Zhu as a full-stack engineer', () => {
   expect(screen.getByText('Full-Stack Engineer')).toBeVisible();
 });
 
-test('offers the verified GitHub and LinkedIn profile links', () => {
+test('frames Xmind as previous work and removes present-tense employment copy', () => {
+  render(<App />);
+
+  expect(
+    screen.getByRole('heading', { name: /previous work at xmind/i }),
+  ).toBeVisible();
+  expect(screen.queryByText(/currently at xmind/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/^now$/i)).not.toBeInTheDocument();
+});
+
+test('expands a selected work narrative accessibly', () => {
+  render(<App />);
+
+  const imports = screen.getByRole('button', {
+    name: /multimodal documents/i,
+  });
+
+  expect(imports).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(imports);
+  expect(imports).toHaveAttribute('aria-expanded', 'true');
+  expect(
+    within(
+      screen.getByRole('region', { name: /multimodal documents/i }),
+    ).getByText(/workflow translated text, markdown/i),
+  ).toBeVisible();
+});
+
+test('keeps the public profile links stable', () => {
   render(<App />);
 
   expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
@@ -21,48 +48,4 @@ test('offers the verified GitHub and LinkedIn profile links', () => {
     'href',
     'https://www.linkedin.com/in/weiye-zhu-211ba33b7/zh/',
   );
-});
-
-test('shows selected production work across AI, SaaS, and mobile delivery', () => {
-  render(<App />);
-
-  expect(
-    screen.getByRole('heading', { name: 'Selected work' }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole('heading', {
-      name: 'AI agent canvas for knowledge work',
-    }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole('heading', {
-      name: 'Multimodal documents to mind maps',
-    }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole('heading', {
-      name: 'Cross-platform AI companion',
-    }),
-  ).toBeVisible();
-});
-
-test('describes the end-to-end engineering toolkit', () => {
-  render(<App />);
-
-  expect(
-    screen.getByRole('heading', { name: 'End-to-end toolkit' }),
-  ).toBeVisible();
-  expect(screen.getByText('TypeScript')).toBeVisible();
-  expect(screen.getByText('React & Next.js')).toBeVisible();
-  expect(screen.getByText('Node.js & NestJS')).toBeVisible();
-  expect(screen.getByText('AI agent systems')).toBeVisible();
-});
-
-test('grounds the portfolio in the current Xmind product role', () => {
-  render(<App />);
-
-  expect(screen.getByRole('heading', { name: 'Currently at Xmind' })).toBeVisible();
-  expect(
-    screen.getByText(/AI-enabled knowledge work in a collaborative SaaS/i),
-  ).toBeVisible();
 });
