@@ -512,6 +512,10 @@ footer {
     grid-template-columns: 2.55rem minmax(0, 1fr) auto;
   }
 
+  .work-label {
+    display: none;
+  }
+
   .work-title {
     font-size: clamp(1.55rem, 8vw, 2.2rem);
   }

@@ -87,13 +87,18 @@ test('marks the active index section after it enters the reading area', () => {
 
   expect(observerCallback).toBeDefined();
 
+  const capabilities = document.getElementById('capabilities');
+  if (!capabilities) {
+    throw new Error('Expected the capabilities section to render');
+  }
+
   act(() => {
     observerCallback?.(
       [
         {
           isIntersecting: true,
-          target: document.getElementById('capabilities'),
-        } as IntersectionObserverEntry,
+          target: capabilities,
+        } as unknown as IntersectionObserverEntry,
       ],
       {} as IntersectionObserver,
     );
