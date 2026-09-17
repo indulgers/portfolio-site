@@ -3,6 +3,8 @@ dist/
 cdk.out/
 coverage/
 work/
+.worktrees/
+.superpowers/
 *.tsbuildinfo
 .env
 .env.*
